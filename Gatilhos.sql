@@ -1,0 +1,3 @@
+-- GATILHOS
+	-- gatilho pra cadastrar administrador e calcular o email da dac dele (gatilho ou procedure)
+	-- gatilho cadastra vaga atualiza o valor de vagas_disponiveis na tabela de moradia
