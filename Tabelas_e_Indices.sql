@@ -9,21 +9,9 @@ CREATE TABLE PESSOA (
 CREATE TABLE USUARIO (
 	ra int NOT NULL,
 	mudanca_imediata int NOT NULL, -- 1=sim / 0=não
-	data_mudanca date,
 
 	PRIMARY KEY (ra),
 	FOREIGN KEY (ra) REFERENCES PESSOA
-)
-
-CREATE TABLE MORADIA(
-	cod_moradia int IDENTITY,
-	nome_moradia char(30) NOT NULL,
-	qtd_moradores int,
-	descricao char(50),
-	ra_adm int NOT NULL,
-	vagas_disponiveis int NULL
-
-	PRIMARY KEY (cod_moradia)
 )
 
 CREATE TABLE ADMINISTRADOR ( --Usuário administrador da moradia
@@ -32,24 +20,37 @@ CREATE TABLE ADMINISTRADOR ( --Usuário administrador da moradia
 	email char(30),
 
 	PRIMARY KEY (ra),
-	FOREIGN KEY (ra) REFERENCES PESSOA,
-	FOREIGN KEY (cod_moradia) REFERENCES MORADIA	
+	FOREIGN KEY (ra) REFERENCES PESSOA
+	-- FOREIGN KEY (cod_moradia) REFERENCES MORADIA	
+)
+
+CREATE TABLE MORADIA(
+	cod_moradia int IDENTITY,
+	nome_moradia char(30) NOT NULL,
+	qtd_moradores int,
+	bio char(50),
+	ra_adm int NOT NULL UNIQUE, -- FK
+	vagas_disponiveis int NULL
+
+	PRIMARY KEY (cod_moradia)
+	FOREIGN KEY (ra) REFERENCES ADMINISTRADOR
 )
 
 CREATE TABLE VAGAS(
 	cod_moradia int NOT NULL,
-	cod_vaga int IDENTITY, -- Seria util deixar isso aqui auto-incrementável depois
-	tipo_vaga int NOT NULL, --1 = temporaria / 0 = permanente
+	cod_vaga int IDENTITY, 
+	tipo_vaga int NOT NULL, -- 0 = temporaria / 1 = permanente
+	dt_criacao datetime, 
+	dt_inicio date,
 
 	PRIMARY KEY (cod_vaga),
 	FOREIGN KEY (cod_moradia) REFERENCES MORADIA
 )
 
-create TABLE VAGA_TEMPORARIA (
+CREATE TABLE VAGA_TEMPORARIA (
 	cod_vaga int NOT NULL,
-	data_inicial date NOT NULL,
-	data_final date,  -- data final não precisa ser obrigatorio
-	valor_semanal money NULL,
+	data_final date, 
+	valor_diaria money NULL,
 
 	PRIMARY KEY (cod_vaga),
 	FOREIGN KEY (cod_vaga) REFERENCES VAGAS
@@ -71,7 +72,7 @@ CREATE TABLE APLICACOES (
 	cod_aplicacao int NOT NULL,
 	cod_vaga int NOT NULL,
 	ra int NOT NULL,
-	data_aplicacao DATE,
+	data_aplicacao DATETIME,
 
 	PRIMARY KEY (cod_aplicacao),
 	FOREIGN KEY (cod_vaga) references VAGAS,

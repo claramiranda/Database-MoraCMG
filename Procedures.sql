@@ -1,21 +1,19 @@
-
 -- PROCEDURES (TODAS as operaçoes de cadastro precisam ser via procedure)
-	-- Cadastrar pessoa (interna)
-	-- Cadastrar usuário
-	-- Cadastrar adm moradia
+	-- Cadastrar Usuário OK
+		-- cadastrar pessoa	OK
 	
-	-- Cadastrar moradia
-	-- Cadastrar vaga
+	-- Cadastrar moradia OK
+		-- Cadastrar ADM moradia OK
 	
-	-- usuário aplicar para vaga
-	-- ++++
-
-
-
--- PROCEDURES
+	-- Cadastrar vaga 
+		-- cadastra vaga temporaria
+		-- Cadastrar vaga fixa	
+	
+	-- Cadastrar Aplicação
+	
 
 -- Cadastrar Usuário
-	CREATE PROCEDURE cadastrar_usuario
+	create PROCEDURE procedure_cadastrar_usuario
 		@ra int,
 		@nome char(50),
 		@curso char(30),
@@ -26,25 +24,23 @@
 
 		insert into PESSOA values (@ra,@nome,@curso)
 		IF @@ROWCOUNT > 0 
-			IF @mudanca_imediata = 0
-				INSERT INTO USUARIO values (@ra, @mudanca_imediata,NULL)
-			ELSE
-				insert into USUARIO values (@ra, @mudanca_imediata,@DataAtual)
+			INSERT INTO USUARIO values (@ra, @mudanca_imediata)
 
 
 -- Massa de dados
 -- Usuarios
 /*
- exec cadastrar_usuario '155041', 'Clara Miranda', 'Análise de Sistemas', '1'
- exec cadastrar_usuario'00001','Kevin Moreira', 'Engenharia de Telecom','1'
- exec cadastrar_usuario '2', 'Nyahn Ekyê', 'Engenharia de Telecom', '0'
- exec cadastrar_usuario '3', 'Germano Haushild', 'Análise de Sistemas', '0'
- exec cadastrar_usuario '4', 'Caio Felipe de Sousa', 'Sistemas de Informação', '0'
- exec cadastrar_usuario '5', 'Cláudio Felipe Domingues', 'Engenharia Ambiental', '1'
+ exec procedure_cadastrar_usuario '155041', 'Clara Miranda', 'Análise de Sistemas', '1'
+ exec procedure_cadastrar_usuario '139659','Kevin Moreira', 'Engenharia de Telecom','1'
+ exec procedure_cadastrar_usuario '186653', 'Nyahn Ekyê', 'Engenharia de Telecom', '0'
+ exec procedure_cadastrar_usuario '154233', 'Germano Haushild', 'Análise de Sistemas', '0'
+ exec procedure_cadastrar_usuario '165822', 'Caio Felipe de Sousa', 'Sistemas de Informação', '0'
+ exec procedure_cadastrar_usuario '135569', 'Cláudio Felipe Domingues', 'Engenharia Ambiental', '1'
 
+ -- ver relação bonita com nome dos usuarios
  select * from view_ver_usuarios
+ select * from pessoa
 */
-
 
 
 -- Cadastra moradia e por consequencia 
@@ -57,13 +53,54 @@
 		insert into MORADIA (nome_moradia,qtd_moradores,descricao,ra_adm)
 		values (@nome_moradia, @qtd_moradores, @descricao, @ra_adm)
 
+		if @@ROWCOUNT > 0 
+			insert into ADMINISTRADOR (ra, cod_moradia) 
+			values (@ra_adm,(SELECT cod_moradia from MORADIA where nome_moradia = @nome_moradia))
 --massa de dados
 /*
  exec cadastrar_moradia 'Bruxos do 71','2','Perto da FT, fãs de jardinagem','155041'
  exec cadastrar_moradia 'Rota Alternativa','8','Galera gente fina, pet friendly','2'
+ exec cadastrar_moradia 'Rep Hour','6','Vizinhos da Rota','5'
+ exec cadastrar_moradia 'Casa da Eli','2','Ger, Eli e vários dog','3'
+ exec cadastrar_moradia 'Apê Perto do Trampo','3','Só para trabalhantes','4'
 
- SELECT * FROM MORADIA
+
+-- ver relação bonita dos ADMS do sistemas
+select * from view_ver_administradores
  */
+			
+			
+			
+		
+			
+			
+-- PROCEDURE CADASTRAR VAGA
+	CREATE PROCEDURE cadastrar_vaga
+		@cod_moradia int,
+		@tipo_vaga int
+		as 
+			DECLARE @DataAtual DATETIME
+			declare @cod_vaga int
+			SET @DataAtual = GETDATE()
+
+			insert into VAGAS(cod_moradia,tipo_vaga,dt_criacao) values (@cod_moradia, @tipo_vaga, @DataAtual)
+			SET @cod_vaga = (SELECT cod_vaga from VAGAS where dt_criacao = @DataAtual)
+			--print @cod_vaga
+			--RETURN @cod_vaga
+
+			if @@ROWCOUNT > 0
+				if @tipo_vaga = 1 
+					insert into VAGA_PERMANENTE(cod_vaga) values (@cod_vaga)
+				else
+					insert into VAGA_TEMPORARIA(cod_vaga) values (@cod_vaga)
+					
+	
+	
+			
+			
+
+			
+
 			
 				
 				
@@ -80,50 +117,11 @@
 --RASCUNHO DAQUI PRA BAIXO
 	
 	
--- Cadastrar Administrador Moradia
-	CREATE PROCEDURE cadastrar_administrador_moradia
-		@ra int,
-		@nome char(50),
-		@curso char(30),
-		@cod_moradia int 
-		
-	AS
-		BEGIN TRANSACTION
-			exec cadastrar_pessoa @ra,@nome,@curso,'1'
-
-			exec cadastrar_pessoa '00001','Kevin Moreira', 'Engenharia de Telecom','1'
-	
 -- TESTES COM PROCEDURES
-
- -- Cadastra moradia e por consequencia o administrador tbm INCOMPLETO
- /*
- CREATE PROCEDURE cadastrar_moradia
-	@nome_moradia char(20),
-	@qtd_moradores int,
-	@descricao char(30),
-	@ra_adm int
-	AS
-		insert into MORADIA (nome_moradia,qtd_moradores,descricao,ra_adm)
-		values (@nome_moradia, @qtd_moradores, @descricao, @ra_adm)
-
-			
-
-
- -- insert into MORADIA (cod_moradia,nome_moradia,vagas_disponiveis,descricao,ra_adm)
- -- values ('001','Rota Alternativa','8','Galera legal, próximo ao mercado.','2')
-
-
--- exec cadastrar_moradia 'Bruxos do 71','2','Perto da FT, fãs de jardinagem','155041'
--- exec cadastrar_moradia 'Rota Alternativa','8','Galera gente fina, pet friendly','2'
-
-*/
- 
- 
  
 
  -- PROCEDURE CADASTRAR VAGAS TEMPORARIAS
  CREATE PROCEDURE cadastrar_vaga_temporaria
-	@cod_vaga int NOT NULL, -- é por causa disso que precisa ser auto-incrementavel esse campo... não faz sentido
 	@data_inicial date NOT NULL,
 	@data_final date,
 	@cod_moradia

@@ -1,13 +1,12 @@
 -- VIEWS
-	-- Relação de usuarios disponiveis pra mudança com as vagas temporarias abertas 
-	-- Relacao de vagas abertas
-	-- Vagas por periodo de tempo
-	-- Relação moradia e seus administradores
-	
+	-- Usuário com detalhes de PESSOA
+	-- Administrador com detalhes de MORADIA
+	-- Vagas com detalhes de MORADIA
+	-- Aplicaçoes com detalhes de Usuário + Moradia
 	
 
 
--- Ver Usuários
+-- Ver Usuários + Nome
 	CREATE VIEW view_ver_usuarios
 	AS
 		SELECT P.nome 'Nome', u.ra 'RA', u.mudanca_imediata 'Disponível para mudança?'
