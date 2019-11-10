@@ -1,8 +1,8 @@
 -- VIEWS
-	-- Usuário com detalhes de PESSOA
-	-- Administrador com detalhes de MORADIA
-	-- Vagas com detalhes de MORADIA
-	-- Aplicaçoes com detalhes de Usuário + Moradia
+	-- Usuário com detalhes de PESSOA ok
+	-- Administrador com detalhes de MORADIA ok 
+	-- Vagas com detalhes de MORADIA ok 
+	-- Aplicaçoes com detalhes de Usuário + Moradia ok
 	
 
 
@@ -13,6 +13,7 @@
 			FROM USUARIO u INNER JOIN PESSOA p
 				ON u.ra = p.ra 
 
+-- select * from view_ver_usuarios
 
 
 -- Ver Administradores de Moradia
@@ -37,6 +38,13 @@
 
 --select * from view_vagas_moradia
 
+create view relatorio_aplicacoes
+as
+Select a.cod_aplicacao, p.nome 'Usuário', m.nome_moradia 'Moradia', a.cod_vaga 'Cod_vaga' from APLICACOES a 
+inner join PESSOA p on p.ra = a.ra
+inner join VAGAS v on v.cod_vaga = a.cod_vaga
+inner join MORADIA m on m.cod_moradia = v.cod_moradia
+select * from relatorio_aplicacoes
 
 
 

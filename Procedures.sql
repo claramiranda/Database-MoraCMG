@@ -5,11 +5,11 @@
 	-- Cadastrar moradia OK
 		-- Cadastrar ADM moradia OK
 	
-	-- Cadastrar vaga 
+	-- Cadastrar vaga ok
 		-- cadastra vaga temporaria
 		-- Cadastrar vaga fixa	
 	
-	-- Cadastrar Aplicação
+	-- Cadastrar Aplicação ok
 	
 
 -- Cadastrar Usuário
@@ -94,10 +94,13 @@ select * from view_ver_administradores
 				else
 					insert into VAGA_TEMPORARIA(cod_vaga) values (@cod_vaga)
 					
-	
-	
-			
-			
+--CAdastra aplicacoes
+create procedure cadastro_aplicacoes
+	@cod_vaga int,
+	@ra int
+	as
+		insert into APLICACOES (cod_vaga,ra) values (@cod_vaga, @ra)
+
 
 			
 

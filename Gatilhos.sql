@@ -21,3 +21,23 @@
 	GO
 
 --select * from moradia
+--em teste
+CREATE TRIGGER gatilho_nova_aplicacao
+ON APLICACOES
+FOR INSERT
+AS
+BEGIN
+    DECLARE
+    @cod_moradia int,
+	@ra int,
+	@cod_vaga int
+   
+    SELECT @cod_vaga = cod_vaga FROM INSERTED
+	SELECT @ra = ra FROM INSERTED
+	--SET @cod_vaga = (SELECT cod_vaga from VAGAS where dt_criacao = @DataAtual)
+	set @cod_moradia = (SELECT @cod_moradia from VAGAS where cod_vaga = @cod_vaga)
+ 
+    UPDATE MORADIA SET vagas_disponiveis = vagas_disponiveis - 1
+    WHERE cod_moradia = @cod_moradia
+END
+GO
