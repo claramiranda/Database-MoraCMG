@@ -14,16 +14,6 @@ CREATE TABLE USUARIO (
 	FOREIGN KEY (ra) REFERENCES PESSOA
 )
 
-CREATE TABLE ADMINISTRADOR ( --Usuário administrador da moradia
-	ra int NOT NULL,
-	cod_moradia int NOT NULL,
-	email char(30),
-
-	PRIMARY KEY (ra),
-	FOREIGN KEY (ra) REFERENCES PESSOA
-	-- FOREIGN KEY (cod_moradia) REFERENCES MORADIA	
-)
-
 CREATE TABLE MORADIA(
 	cod_moradia int IDENTITY,
 	nome_moradia char(30) NOT NULL,
@@ -33,8 +23,18 @@ CREATE TABLE MORADIA(
 	vagas_disponiveis int NULL
 
 	PRIMARY KEY (cod_moradia)
-	FOREIGN KEY (ra_adm) REFERENCES ADMINISTRADOR
 )
+
+CREATE TABLE ADMINISTRADOR ( --Usuário administrador da moradia
+	ra int NOT NULL,
+	cod_moradia int NOT NULL,
+	email char(30),
+
+	FOREIGN KEY (ra) REFERENCES PESSOA,
+	FOREIGN KEY (cod_moradia) REFERENCES MORADIA	
+)
+
+
 
 CREATE TABLE VAGAS(
 	cod_moradia int NOT NULL,
@@ -42,6 +42,8 @@ CREATE TABLE VAGAS(
 	tipo_vaga int NOT NULL, -- 0 = temporaria / 1 = permanente
 	dt_criacao datetime, 
 	dt_inicio date,
+	vaga_ativa bit,
+	qtd_aplicacoes int,
 
 	PRIMARY KEY (cod_vaga),
 	FOREIGN KEY (cod_moradia) REFERENCES MORADIA
@@ -52,7 +54,6 @@ CREATE TABLE VAGA_TEMPORARIA (
 	data_final date, 
 	valor_diaria money NULL,
 
-	PRIMARY KEY (cod_vaga),
 	FOREIGN KEY (cod_vaga) REFERENCES VAGAS
 )
 
@@ -63,7 +64,6 @@ CREATE TABLE VAGA_PERMANENTE (
 	valor_total money,
 	pessoas_no_quarto int, -- campo para indicar se é vaga individual ou para dividir quarto
 
-	PRIMARY KEY (cod_vaga),
 	FOREIGN KEY (cod_vaga) REFERENCES VAGAS
 )
 
