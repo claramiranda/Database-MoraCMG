@@ -9,9 +9,14 @@
 -- Ver Usuários + Nome
 	CREATE VIEW view_ver_usuarios
 	AS
-		SELECT P.nome 'Nome', u.ra 'RA', u.mudanca_imediata 'Disponível para mudança?'
-			FROM USUARIO u INNER JOIN PESSOA p
-				ON u.ra = p.ra 
+		SELECT p.nome, u.ra, 
+			case when u.mudanca_imediata = 1 then 'Sim'
+			else 'Não'
+			end as [Disponível para mudança?]
+		
+		FROM
+			dbo.USUARIO AS u INNER JOIN                        
+			dbo.PESSOA AS p ON u.ra = p.ra
 
 -- select * from view_ver_usuarios
 
@@ -31,10 +36,14 @@
 		
 
 -- Ver relação de vagas por moradia
-		create view view_vagas_moradia
-		 as
-			 SELECT v.cod_vaga 'Vaga', m.nome_moradia 'Moradia', v.tipo_vaga from VAGAS v inner join MORADIA m
-			 on v.cod_moradia = m.cod_moradia
+	SELECT v.cod_vaga 'Vaga', m.nome_moradia 'Moradia', 
+		case when v.tipo_vaga = 1 then 'Permanente'
+		else 'Temporária' 
+		end as 'Tipo de Vaga'
+	from VAGAS v inner join MORADIA m
+	on v.cod_moradia = m.cod_moradia		 
+			 
+			 
 
 --select * from view_vagas_moradia
 
