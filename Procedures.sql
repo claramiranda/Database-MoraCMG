@@ -94,6 +94,26 @@ select * from view_ver_administradores
 				else
 					insert into VAGA_TEMPORARIA(cod_vaga) values (@cod_vaga)
 					
+					
+					
+					
+-- PROCEDURE DELETE VAGA
+		CREATE PROCEDURE delete_vaga
+		@cod_vaga int
+		as 
+		declare @tipo_vaga int
+		SET @tipo_vaga = (SELECT tipo_vaga from VAGAS where cod_vaga = @cod_vaga)
+			
+			if @tipo_vaga = 1
+				delete from VAGA_PERMANENTE where cod_vaga = @cod_vaga
+			else
+				delete from VAGA_TEMPORARIA where cod_vaga = @cod_vaga
+				
+			if @@ROWCOUNT > 0
+				delete from VAGAS where cod_vaga = @cod_vaga
+
+
+					
 --CAdastra aplicacoes
 create procedure cadastro_aplicacoes
 	@cod_vaga int,
