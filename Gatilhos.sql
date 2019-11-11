@@ -5,7 +5,7 @@
 	
 	
 	-- gatilho cadastra vaga atualiza o valor de vagas_disponiveis na tabela de moradia
-	CREATE TRIGGER gatilho_atualiza_vagas_disponiveis
+	CREATE TRIGGER gatilho_incrementa_vagas_disponiveis
 	ON VAGAS
 	FOR INSERT
 	AS
@@ -20,6 +20,25 @@
 	END
 	GO
 
+-- gatilho deleta vaga decrementa o valor de vagas_disponiveis na tabela de moradia
+	CREATE TRIGGER gatilho_decrementa_vagas_disponiveis
+	ON VAGAS
+	FOR DELETE
+	AS
+	BEGIN
+		DECLARE
+		@cod_moradia int
+	   
+		SELECT @cod_moradia = cod_moradia FROM DELETED
+	 
+		UPDATE MORADIA SET vagas_disponiveis = vagas_disponiveis - 1
+		WHERE cod_moradia = @cod_moradia
+	END
+	GO
+	
+	
+	
+	-- Rascunho daqui pra baixo
 --select * from moradia
 --em teste
 CREATE TRIGGER gatilho_nova_aplicacao
