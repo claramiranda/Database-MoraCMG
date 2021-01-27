@@ -8,13 +8,13 @@ CREATE TABLE PESSOA (
 
 CREATE TABLE USUARIO (
 	ra int NOT NULL,
-	mudanca_imediata int NOT NULL, -- 1=sim / 0=n„o
+	mudanca_imediata int NOT NULL, -- 1=sim / 0=n√£o
 
 	PRIMARY KEY (ra),
 	FOREIGN KEY (ra) REFERENCES PESSOA
 )
 
-CREATE TABLE ADMINISTRADOR ( --Usu·rio administrador da moradia
+CREATE TABLE ADMINISTRADOR ( --Usu√°rio administrador da moradia
 	ra int NOT NULL,
 	cod_moradia int NOT NULL,
 	email char(30),
@@ -33,7 +33,7 @@ CREATE TABLE MORADIA(
 	vagas_disponiveis int NULL
 
 	PRIMARY KEY (cod_moradia)
-	FOREIGN KEY (ra) REFERENCES ADMINISTRADOR
+	FOREIGN KEY (ra_adm) REFERENCES ADMINISTRADOR
 )
 
 CREATE TABLE VAGAS(
@@ -61,7 +61,7 @@ CREATE TABLE VAGA_PERMANENTE (
 	aluguel money,
 	contas money,
 	valor_total money,
-	pessoas_no_quarto int, -- campo para indicar se È vaga individual ou para dividir quarto
+	pessoas_no_quarto int, -- campo para indicar se √© vaga individual ou para dividir quarto
 
 	PRIMARY KEY (cod_vaga),
 	FOREIGN KEY (cod_vaga) REFERENCES VAGAS
@@ -79,7 +79,7 @@ CREATE TABLE APLICACOES (
 	FOREIGN KEY (ra) references USUARIO
 )
 
--- ÕNDICES (È bom revisar pq eu n„o sei direito o que to fazendo aqui)
+-- √çNDICES (√© bom revisar pq eu n√£o sei direito o que to fazendo aqui)
 CREATE UNIQUE INDEX index_ra_pessoa ON PESSOA (ra)
 CREATE UNIQUE INDEX index_cod_aplicacao ON APLICACOES (cod_aplicacao)
 CREATE UNIQUE INDEX index_cod_moradia ON MORADIA (cod_moradia)
